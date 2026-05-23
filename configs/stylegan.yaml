@@ -1,0 +1,32 @@
+# configs/stylegan.yaml — StyleGAN2-inspired (Karras et al., 2020)
+# Mapping network + modulated convolutions + equalized LR + minibatch std
+# Highest visual quality — recommended for production artifact synthesis
+_base_: base.yaml
+
+General:
+  model_name: stylegan
+
+Dataset:
+  domain_a_dir: /path/to/real_wsi_tiles
+  domain_b_dir: /path/to/artifact_tiles
+  paired: false
+
+Training:
+  epochs: 300
+  batch_size: 4
+  lr_generator:     1.0e-3
+  lr_discriminator: 1.0e-3
+  beta1: 0.0
+  beta2: 0.99
+  lambda_cycle: 10.0
+  lambda_identity: 5.0
+  lambda_path_length: 2.0            # path-length regularisation weight
+  path_length_every: 16              # apply pl-reg every N steps
+  scheduler: none                    # StyleGAN2 uses fixed LR
+
+StyleGAN:
+  generator_features: 64
+  discriminator_features: 64
+  style_dim: 512                     # intermediate latent w dimension
+  mapping_layers: 8                  # depth of mapping network
+  num_domains: 2                     # 2 = clean + artifact

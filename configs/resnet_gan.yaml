@@ -1,0 +1,28 @@
+# configs/resnet_gan.yaml — ResNet GAN: ResNet-50 pretrained backbone generator
+# Cross-domain artifact transfer with ImageNet-pretrained encoder
+# Drop-in upgrade over cycle_gan when training data is limited
+_base_: base.yaml
+
+General:
+  model_name: resnet_gan
+
+Dataset:
+  domain_a_dir: /path/to/real_wsi_tiles
+  domain_b_dir: /path/to/artifact_tiles
+  paired: false
+
+Training:
+  epochs: 200
+  batch_size: 1
+  lr_generator:     1.0e-4           # lower LR — pretrained backbone
+  lr_discriminator: 2.0e-4
+  lambda_cycle: 10.0
+  lambda_identity: 5.0
+  scheduler: linear_decay
+  decay_start_epoch: 100
+
+ResNetGAN:
+  pretrained: true                   # load ImageNet ResNet-50 weights
+  num_residual_blocks: 9
+  bottleneck_features: 256           # feature dim at bottleneck
+  discriminator_features: 64

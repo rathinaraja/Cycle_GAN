@@ -1,0 +1,30 @@
+# configs/biggan.yaml — BigGAN-inspired architecture (Brock et al., 2018)
+# Self-attention + spectral norm + conditional BatchNorm
+# Best for large, diverse artifact datasets requiring global coherence
+_base_: base.yaml
+
+General:
+  model_name: biggan
+
+Dataset:
+  domain_a_dir: /path/to/real_wsi_tiles
+  domain_b_dir: /path/to/artifact_tiles
+  paired: false
+
+Training:
+  epochs: 300
+  batch_size: 4                      # BigGAN benefits from larger batch
+  lr_generator:     1.0e-4
+  lr_discriminator: 4.0e-4           # 2-4× higher D LR (standard for BigGAN)
+  beta1: 0.0
+  beta2: 0.999
+  lambda_cycle: 10.0
+  lambda_identity: 5.0
+  lambda_gp: 10.0
+  n_critic: 2                        # D steps per G step
+  scheduler: cosine
+
+BigGAN:
+  generator_features: 64
+  discriminator_features: 64
+  num_domains: 2                     # 2 = clean + artifact; increase for multi-artifact

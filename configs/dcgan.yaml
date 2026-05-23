@@ -1,0 +1,25 @@
+# configs/dcgan.yaml — DCGAN: Deep Convolutional GAN (Radford et al., 2015)
+# Strided convolutions, BatchNorm, no FC layers — stable baseline
+# Single-domain: learns style variation within one artifact domain
+_base_: base.yaml
+
+General:
+  model_name: dcgan
+
+Dataset:
+  domain_a_dir: /path/to/source_images
+  domain_b_dir: null                       # single-domain only
+
+Training:
+  epochs: 200
+  batch_size: 4
+  lr_generator:     2.0e-4
+  lr_discriminator: 2.0e-4
+  beta1: 0.5
+  beta2: 0.999
+  scheduler: linear_decay
+  decay_start_epoch: 100
+
+DCGAN:
+  generator_features: 64
+  discriminator_features: 64
